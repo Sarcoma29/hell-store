@@ -10,6 +10,11 @@ class BrandController {
         const brands = await Brand.findAll()
         return res.json(brands)
     }
+    async deleteOne(req,res){
+        const {name} = req.body
+        const brands = await Brand.destroy({where: {name}})
+        return res.json(brands)
+    }
 }
 
 module.exports = new BrandController();

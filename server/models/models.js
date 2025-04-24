@@ -49,8 +49,8 @@ const TypeBrand = sequelize.define("type_brand", {
     id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true,},
 })
 
-User.hasOne(Basket)
-Basket.belongsTo(User)
+User.hasOne(Basket, { foreignKey: "userId", onDelete: "CASCADE"})
+Basket.belongsTo(User, {foreignKey: "userId"})
 
 User.hasMany(Rating)
 Rating.belongsTo(User)

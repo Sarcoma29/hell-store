@@ -55,6 +55,29 @@ class UserController {
         const token = generateJwt(req.user.id, req.user.email, req.user.role)
         return res.json({token})
     }
+
+    async deleteAccount (req, res, next) {
+        try {
+            const userId = req.user.id; // Достаем из токена
+            const { password } = req.body;
+
+            // Проверка пароля
+            const user = await User.findByPk(userId);
+            if (!user) return next(ApiError.badRequest("Пользователь не найден"));
+
+            const isValidPassword = bcrypt.compareSync(password, user.password);
+            if (!isValidPassword) {
+            return next(ApiError.badRequest("Неверный пароль"));
+            }
+
+
+            await User.destroy({where: {id: userId}})
+            return res.json({ message: "Аккаунт удален" });
+
+        } catch(e) {
+            next(ApiError.internal(e.message))
+        }
+    }
 }
 
 module.exports = new UserController();
